@@ -11,9 +11,23 @@
 
 
 {% block body_block %}
-    <div class="jumbotron">
-        <h1>{{ subcategory.name }}</h1>
-    </div>
+
+
+    <section class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="content">
+                        <h1 class="page-name">{{ subcategory.name }}</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="{% url 'hawkuna:homepage' %}">Home</a></li>
+                            <li class="active">{{ subcategory.name }}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
   {% if user.is_authenticated %}
         {% if profile.isSeller %}
@@ -23,24 +37,24 @@
 
     {% if products %}
         <div style="width:100%">
-            <form method="get" action="{% url 'hawkuna:show_sub' category.slug subcategory.slug %}" class="form-inline centre" style="margin-left: 40%">
-                <input type="number" name="price-min" id="price-min" min="0" max="1000" placeholder="Min"><br/>
-                <input type="number" name="price-max" id="price-max"  min="0" max="1000" placeholder="Max">
-                <input type="submit" value="Filter" class="btn btn-primary">
+            <form method="get" action="{% url 'hawkuna:show_sub' category.slug subcategory.slug %}" class="form-inline centre" style="margin-left: 10%">
+                <input type="number" name="price-min" id="price-min" min="0" max="1000" placeholder="Min" style="padding-right: 20px;">
+                <input type="number" name="price-max" id="price-max"  min="0" max="1000" placeholder="Max" style="padding-right: 20px;">
+                <input type="submit" value="Filter" class="btn btn-main text-center" style="margin-left: 20px; margin-bottom: 20px;">
             </form>
         </div>
         <div class="container">
         <div class="row">
             {% for p in products %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="product-grid">
+                <div class="product-grid" style="margin-top: 40px; margin-bottom: 10px;">
                     <div class="product-image">
                         <a href="#"><img src="{{  p.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ p.name }}'s image" /><br/> 
                         </a>
                     </div>
                     <div class="product-content">
                         <h3 class="title"><a href="/hawkuna/cat/{{ p.category.slug }}/{{ p.subcategory.slug }}/{{ p.slug }}">{{ p.name }}</a></h3>
-                        <div class="price">£{{ p.price }}0</div>
+                        <div class="price">${{ p.price }}0</div>
                     </div>
 
                     <ul class="social">

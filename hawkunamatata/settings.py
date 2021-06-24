@@ -19,8 +19,8 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='105421927524-rqu9q3j4897rs74k3o1e4rtrldhl9sla'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET='UUw-NOA2igwOzlm3zQP7cUKG'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='976128300478-66vf4b9quqa906h8m8thhdpeh4g8vf7e.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET='DVEuARhJTHs0iTEI-_MMy4zO'
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,21 +35,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #during development!!!!
-"""
-Code below is for sending emails for resetting password. We have not specify user and password, because
-our repository is public and this information can be seen by anyone. Instead reset message is displayed on 
-the console. We also have similar problem on pythonanywhere.
-"""
-"""
-EMAIL_HOST = ''
-EMAIL_PORT = 587
-#add account here
-EMAIL_HOST_USER = 're-buy'
-#add password here
-EMAIL_HOST_PASSWORD = 'wadproject2020'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Re* team <noreply@example.com>'
-"""
+
 
 # Application definition
 
@@ -174,7 +160,7 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_URL = '/auth/login/google-oauth2/'
 
-LOGIN_REDIRECT_URL = '/manage/'
+LOGIN_REDIRECT_URL = '/hawkuna/manage/'
 LOGOUT_REDIRECT_URL = ''
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 

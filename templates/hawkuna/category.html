@@ -12,10 +12,27 @@
 
 
 {% block body_block %}
+
+
 <!-- Heading of category-->
-<div class="jumbotron">
-    <h1> {{ selected_category.name }} </h1>
-</div>
+
+
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h1 class="page-name">{{ selected_category.name }}</h1>
+                    <ol class="breadcrumb">
+                        <li><a href="{% url 'hawkuna:homepage' %}">Home</a></li>
+                        <li class="active">{{ selected_category.name }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
         <!-- If there are products in this category display them-->
         {% if products %}
         <div style="width:100%">

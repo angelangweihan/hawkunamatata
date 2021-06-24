@@ -10,7 +10,7 @@ def populate():
     North = [
         {'name': 'Chong Pang Market & Food Centre'},
         {'name': 'Marsailing Mall Hawker Centre'},
-        {'name': 'Woodlands Street 12 Hawker Centre'}
+        {'name': 'Woodlands Street 12 Hawker Centre'},
         {'name': 'Yishun Park Hawker Centre'}]
 
     East = [
@@ -52,6 +52,11 @@ def populate():
        'West': {'subcategories': West},
        'Central': {'subcategories': Central},
     }
+       
+
+
+
+
        
     for cat, cat_data in categories.items():
         c = add_cat(cat)

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
-from hawkuna.models import Category, Subcategory, Product, CurrentProduct, UserProfile, User, SoldProduct, Review, Wishlist
-from hawkuna.forms import ProductForm, UserForm,  UserUpdateForm, SellerForm, UpdateProductForm, ReviewForm, UpdateReviewForm, UserProfileForm, ProfileUpdateForm
+from hawkuna.models import Category, Subcategory, Product, CurrentProduct, UserProfile, User, Wishlist, SoldProduct, Review, Chat, Message
+from hawkuna.forms import ProductForm, UserForm, UserProfileForm,  UserUpdateForm, ProfileUpdateForm, SellerForm, UpdateProductForm, ReviewForm, UpdateReviewForm
 from django.db.models import Q
 
 from django.contrib import messages
@@ -12,7 +12,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.http import JsonResponse
-# from pyrebase import pyrebase
 from django.shortcuts import render
 from operator import attrgetter
 
@@ -131,8 +130,8 @@ def show_category(request, category_name_slug):
             max_price = 1000
         products = CurrentProduct.objects.filter(category=category_selected).filter(price__gte=min_price).filter(price__lte=max_price).order_by('date')
         context_dict['products']=products
-        context_dict['subcategories'] = subCat
-        context_dict['category'] = category
+         #context_dict['subcategories'] = subCat
+         #context_dict['category'] = category
      except Category.DoesNotExist:
          context_dict['subcategories'] = None
          context_dict['category'] = None
@@ -161,7 +160,7 @@ def show_sub(request, category_name_slug, subcategory_name_slug):
             context_dict['user'] = None
         else:
             context_dict['user'] = request.user
-            context_dict['profile'] = UserProfile.objects.get(user=context_dict['user'])
+            # context_dict['profile'] = UserProfile.objects.get(user=context_dict['user'])
             
     except Subcategory.DoesNotExist:
         context_dict['subcategory'] = None
@@ -197,7 +196,7 @@ Register
 """
 def register(request):
     context_dict = {}
-    context_dict['title'] = 'Join hawkuna-matata*'
+    context_dict['title'] = 'Join Re*'
     
     registered = False
     if request.method == 'POST':
@@ -215,10 +214,9 @@ def register(request):
                 profile.picture = request.FILES['picture']
             profile.save()
             registered = True
-
+            
             wishlist = Wishlist(user=profile)
             wishlist.save()
-
         else:
             print(user_form.errors, profile_form.errors)
             
@@ -272,7 +270,6 @@ def view_profile(request, user_name_slug):
 """
 Edit profile view
 """
-
 @login_required
 def edit_profile(request, user_name_slug):
     context_dict = {}
@@ -298,7 +295,7 @@ def edit_profile(request, user_name_slug):
     context_dict ['form'] = form
     context_dict['profile_form'] = profile_form
     return render(request, 'hawkuna/edit_profile.html', context_dict)
- 
+    
 
 """
 Login view 
@@ -326,7 +323,6 @@ def user_login(request):
 """
 Successful login with Google Account
 """
-
 def manage(request):
     context_dict = {}
     user = request.user
@@ -340,10 +336,9 @@ def manage(request):
             if 'picture' in request.FILES:
                 profile.picture = request.FILES['picture']
             profile.save()
-
+            
             wishlist = Wishlist(user=profile)
             wishlist.save()
-            
         
         else:
             print(profile_form.errors)
@@ -604,7 +599,7 @@ def sell_product(request, category_name_slug, subcategory_name_slug, product_nam
     
     context_dict['sold'] = sold
     return render(request, 'hawkuna/sell_product.html', context_dict)
-
+    
 """
 Wishlist, add to wishlist, delete items from wishlist
 """
@@ -615,15 +610,15 @@ def wishlist(request, user_name_slug):
         userProfile = UserProfile.objects.get(user=user)
     except UserProfile.DoesNotExist:
         print("you don't have a userprofile")
-        return redirect('/reuse/')
+        return redirect('/hawkuna/')
     
     try:
         wishlist = Wishlist.objects.get(user=userProfile)
         products = wishlist.products.filter(wishlist=wishlist)
     except Wishlist.DoesNotExist:
-        return redirect('/reuse/')
+        return redirect('/hawkuna/')
     
-    return render(request,'reuse/wishlist.html', {'products': products})
+    return render(request,'hawkuna/wishlist.html', {'products': products})
 
 @login_required
 def add_to_wishlist(request, category_name_slug, subcategory_name_slug, product_name_slug):
@@ -642,9 +637,9 @@ def add_to_wishlist(request, category_name_slug, subcategory_name_slug, product_
             wishlist.products.add(product)
             wishlist.save()
             # Change to pop up
-            return redirect(reverse('reuse:product', kwargs={'category_name_slug':category_name_slug, 'subcategory_name_slug':subcategory_name_slug, 'product_name_slug':product_name_slug}))
+            return redirect(reverse('hawkuna:product', kwargs={'category_name_slug':category_name_slug, 'subcategory_name_slug':subcategory_name_slug, 'product_name_slug':product_name_slug}))
     
-    return render(request, 'reuse/product.html', {'category': category, 'subcategory': subcategory, 'product': product})
+    return render(request, 'hawkuna/product.html', {'category': category, 'subcategory': subcategory, 'product': product})
 
 def remove_from_wishlist(request, user_name_slug, product_name_slug):
     user = request.user.id
@@ -654,7 +649,7 @@ def remove_from_wishlist(request, user_name_slug, product_name_slug):
     
     if product:
         wishlist.products.remove(product)
-    return redirect(reverse('reuse:wishlist', kwargs={'user_name_slug':user_name_slug}))
+    return redirect(reverse('hawkuna:wishlist', kwargs={'user_name_slug':user_name_slug}))
     
 
 """ 
@@ -723,8 +718,66 @@ def delete_review(request, product_name_slug):
     return redirect(reverse('hawkuna:past_orders', kwargs={'user_name_slug': profile.slug}))
 
 
+"""
+Chat stuff
+"""
+def chat(request, user_name_slug):
+    user = request.user
+    profile = get_object_or_404(UserProfile, user=user)
+    chats = Chat.objects.filter(user1=profile)
+    otherchats = Chat.objects.filter(user2=profile)
+    
+    user_chats = []
+    for chat in chats:
+        user_chats.append(chat)
+    for otherchat in otherchats:
+        user_chats.append(otherchat)
+    
+    context_dict = {'title':'Your chats', 'chats':user_chats}
+    return render(request, 'hawkuna/chat.html', context_dict)
+    
+def chat_with(request, user_name_slug):
+    chatopen = False
+    context_dict = {}
+    if request.method == 'POST':
+        if 'name' in request.POST:
+            name = request.POST['name']
+            user = request.user
+            profilereq = get_object_or_404(UserProfile, user=user)
+            profilerec = get_object_or_404(UserProfile, slug=user_name_slug)
+            chat = Chat(user1=profilereq, user2=profilerec)
+            chat.name = name
+            chat.save()
+            context_dict['chat'] = chat
+            chatopen = True
+    context_dict['chatopen'] = chatopen
+    context_dict['otheruser'] = user_name_slug
+    return render(request, 'hawkuna/chat_with.html', context_dict)
 
-
-
-
+        
+def chat_open(request, chat_name_slug):
+    chat = get_object_or_404(Chat, slug=chat_name_slug)
+    context_dict = {'chat': chat}
+    
+    user = request.user
+    profilereq = get_object_or_404(UserProfile, user=user)
+    if profilereq == chat.user1:
+        context_dict['contact'] = chat.user2
+    else:
+        context_dict['contact'] = chat.user1
+    
+    if request.method == 'POST':
+        if 'text' in request.POST:
+            text = request.POST['text']
+            message = Message(text=text, chat=chat, sender=profilereq)
+            message.save()
             
+    messages = Message.objects.filter(chat=chat)
+    context_dict['messages'] = messages
+    
+    return render(request, 'hawkuna/chat_open.html', context_dict)
+
+
+
+
+
