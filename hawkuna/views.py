@@ -248,7 +248,6 @@ def view_profile(request, user_name_slug):
     context_dict['address'] = profile.address
     context_dict['city'] = profile.city
     context_dict['postcode'] = profile.postcode
-    context_dict['description'] = profile.description
     context_dict['picture'] = profile.picture
     context_dict['isSeller'] = profile.isSeller
     context_dict['date_reg'] = profile.date_reg

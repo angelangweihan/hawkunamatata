@@ -81,8 +81,8 @@ class UserProfileForm(forms.ModelForm):
     slug = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = UserProfile
-        fields = ('city', 'postcode', 'description', 'picture', 'address')
-    field_order=['address', 'postcode', 'city', 'description', 'picture']
+        fields = ('city', 'postcode', 'picture', 'address')
+    field_order=['address', 'postcode', 'city', 'picture']
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -96,6 +96,6 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['city', 'postcode', 'description', 'picture','address']
-    field_order=['address', 'postcode', 'city', 'description', 'picture']
+        fields = ['city', 'postcode', 'picture','address']
+    field_order=['address', 'postcode', 'city', 'picture']
 

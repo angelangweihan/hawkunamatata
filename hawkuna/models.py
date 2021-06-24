@@ -15,7 +15,6 @@ class UserProfile(models.Model):
     address = models.CharField(max_length = 128)
     city = models.CharField(max_length = 20)
     postcode = models.CharField(max_length = 10)
-    description = models.TextField(help_text = "Tell us something about you")
     picture = models.ImageField(upload_to='profile_images', default='profile_images/default-user.png')
     dob = models.DateField(null=True)
     isSeller = models.BooleanField(default = False)
