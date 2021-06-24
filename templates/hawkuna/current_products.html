@@ -1,0 +1,42 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Current Products
+{% endblock %}
+
+{% block titlebar_block %}
+    My products
+{% endblock %}
+
+{% block body_block %}
+<div class="container">
+    {% if products %}
+        <div class="container">
+        <div class="row">
+        {% for p in products %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="#"><img src="{{  p.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ p.name }}`s image" /><br/> 
+                        </a>
+                    </div>
+                <div class="product-content">
+                        <h3 class="title"><a href="{% url 'hawkuna:product' p.category.slug p.subcategory.slug p.slug %}">{{ p.name }}</a></h3>
+                        <div class="price">£{{ p.price }}0</div>       
+
+                </div>
+            </div>
+        </div>
+           
+                   
+        {% endfor %}
+    {% else %}
+    <div class="jumbotron">
+        <p class="bold">You are not selling any product yet</p>
+    </div>
+    {% endif %}
+
+</div> 
+  
+{% endblock %}

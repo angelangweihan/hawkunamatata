@@ -1,0 +1,55 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+{% load hawkuna_template_tags %}
+{% load widget_tweaks %}
+
+{% block title_block %} 
+    Successful login
+{% endblock %}
+
+{% block titlebar_block %}
+    Login with Google
+{% endblock %}
+
+{% block body_block %}  
+<!-- template for login with google API-->
+
+    {% get_first_login user as profile %}
+<!-- for google account that have already sign in the app-->
+    {% if profile %}
+    <div class="container">
+        <div class="jumbotron">
+            <h2> You have logged in successfully.</h2>
+                <a href="{% url 'hawkuna:homepage' %}" class="btn btn-primary">Return to the homepage</a>
+                <a href="{% url 'hawkuna:profile' profile.slug %}" class="btn btn-primary">Go to my profile</a>
+        </div>
+    </div>
+
+    <!-- if user is loggin with google account for the first time in the app, they need to complete a short form to create a profile for the app -->
+    {% else %}
+    <div class="container">
+        <div class="jumbotron">
+        <h2>Looks like it's your first time on hawkuna-matata*</h2> 
+        <p class="bold"> There is just one small thing before you can start jump into the amazing world of second hand items! You will need to complete your profile info. </p>
+        </div>
+        <form id="user_form" method="post" action="{% url 'hawkuna:manage' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for hidden_field in profile_form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+
+            {% for field in profile_form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <input type="submit" name="submit" value="Complete registration" class="btn btn-primary"/>
+        </form>
+    {% endif %}
+	
+</div>
+{% endblock %}

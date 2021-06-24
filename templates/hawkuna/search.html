@@ -1,0 +1,196 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Search
+{% endblock %}
+
+{% block titlebar_block %}
+    Search
+{% endblock %}
+
+<!-- results from search -->
+
+{% block body_block %}
+<!-- if search for both products and users -->
+{% if product_post and user_post %}
+    <div class="jumbotron">
+        <h1> Search results for {{ query }}</h1>      
+    </div>
+    <div class="container">
+    <h3 class="centre"> Products that match {{ query }} </h3>
+    <hr style="width:400px"/>
+    <div class="row">
+    {% for product in product_post %}
+   <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="{% url 'hawkuna:product' product.category.slug product.subcategory.slug product.slug %}"><img src="{{ product.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ product.name }}`s image" /><br/> 
+                        </a>
+                    </div>
+                     {% if user.is_authenticated %}
+                    <div class="product-content">
+                        <h3 class="title"><a href="{% url 'hawkuna:product' product.category.slug product.subcategory.slug product.slug %}">{{ product.name }}</a></h3>
+                        <h5 class="subcat"> {{ product.subcategory }}</h5>
+                        <div class="price">£{{ product.price }}0</div>
+                        <p> Added on {{ product.date }}.</p>
+
+                    </div>
+
+                    <!-- Pop-up buttons -->
+                    <ul class="social">
+                        <!-- pop-up quick preview-->
+                        <li> <a href="javascript:toggle_visibility('{{ product.slug }}')" data-tip="quick view">
+                            <i class="fa fa-eye"></i> </a>
+                         </li>
+                        <div id="{{ product.slug }}" class="pop-up-menu">
+                            <div class="card">
+                                      <div class="card-body">
+                                        <p class="card-text">{{ product.description }}</p>
+                                        <p class="card-text">  Sold by:
+                                            {% if product.seller.user == request.user %}
+                                                <a href="{% url 'hawkuna:profile' the_name %}">You</a>
+                                            {% else %}
+                                                <a href="{% url 'hawkuna:profile' product.seller.slug %}">{{ product.seller }}</a>
+                                            {% endif %}
+                                            </p>
+                                        <p>  </p>
+                                      </div>
+                            </div>         
+                        </div>
+                      
+                    </ul>
+                     {% else %}
+                    <div class="card-body">
+                        <p><a href="{% url 'hawkuna:login' %}">Log in</a> or <a href="{% url 'hawkuna:register' %}">Register</a> to see the product's info</p>
+                    </div>
+            {% endif %}
+                </div>
+            </div>   
+
+    {% endfor %}
+    </div>
+   
+    <h3 class="centre" style="margin-top: 100px"> Users that match {{ query }} </h3>
+    <hr style="width:400px"/>
+    <div class="row">
+    {% for user in user_post %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <img src="{{MEDIA_URL}}{{ user.picture }}" class="pic-1" width="300px" height="300px" alt="#`s image" /><br/> 
+                    </div>
+                     
+                    <div class="product-content">
+                        <h3 class="title"><a href="{% url 'hawkuna:profile' user.slug %}">{{ user }} </a></h3>
+                        <h5 class="subcat"> <i class="fa fa-info"></i>  {{ user.description }}</h5>
+                    </div>
+                </div>
+            </div>  
+    {% endfor %}        
+    </div>
+</div>
+
+
+ <!-- if search for products only -->   
+{% elif product_post %}
+    <div class="jumbotron">
+        <h1> Search results for {{ query }}</h1>      
+    </div>
+    <div class="container">
+    <h3 class="centre"> Products that match {{ query }} </h3>
+    <hr style="width:400px"/>
+    <div class="row">
+   {% for product in product_post %}
+   <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="{% url 'hawkuna:product' product.category.slug product.subcategory.slug product.slug %}"><img src="{{ product.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ product.name }}`s image" /><br/> 
+                        </a>
+                    </div>
+                     {% if user.is_authenticated %}
+                    <div class="product-content">
+                        <h3 class="title"><a href="{% url 'hawkuna:product' product.category.slug product.subcategory.slug product.slug %}">{{ product.name }}</a></h3>
+                        <h5 class="subcat"> {{ product.subcategory }}</h5>
+                        <div class="price">£{{ product.price }}0</div>
+                        <p> Added on {{ product.date }}.</p>
+
+                    </div>
+
+                    <!-- Pop-up buttons -->
+                    <ul class="social">
+                        <!-- pop-up quick preview-->
+                        <li> <a href="javascript:toggle_visibility('{{ product.slug }}')" data-tip="quick view">
+                            <i class="fa fa-eye"></i> </a>
+                         </li>
+                        <div id="{{ product.slug }}" class="pop-up-menu">
+                            <div class="card">
+                                      <div class="card-body">
+                                        <p class="card-text">{{ product.description }}</p>
+                                        <p class="card-text">  Sold by:
+                                            {% if product.seller.user == request.user %}
+                                                <a href="{% url 'hawkuna:profile' the_name %}">You</a>
+                                            {% else %}
+                                                <a href="{% url 'hawkuna:profile' product.seller.slug %}">{{ product.seller }}</a>
+                                            {% endif %}
+                                            </p>
+                                        <p>  </p>
+                                      </div>
+                            </div>         
+                        </div>
+                      
+                    </ul>
+                     {% else %}
+                    <div class="card-body">
+                        <p><a href="{% url 'hawkuna:login' %}">Log in</a> or <a href="{% url 'hawkuna:register' %}">Register</a> to see the product's info</p>
+                    </div>
+            {% endif %}
+                </div>
+            </div>   
+
+    {% endfor %}
+
+   </div>
+    </div>
+
+
+<!-- search for users -->
+{% elif user_post %}
+    <div class="jumbotron">
+        <h1> Search results for {{ query }}</h1>      
+    </div>
+    <div class="container">
+    <h3 class="centre"> Users that match {{ query }} </h3>
+    <hr style="width:400px"/>
+    <div class="row">
+ {% for user in user_post %}
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <img src="{{MEDIA_URL}}{{ user.picture }}" class="pic-1" width="300px" height="300px" alt="#`s image" /><br/> 
+                    </div>
+                     
+                    <div class="product-content">
+                        <h3 class="title"><a href="{% url 'hawkuna:profile' user.slug %}">{{ user }} </a></h3>
+                        <h5 class="subcat"> <i class="fa fa-info"></i>  {{user.description }}</h5>
+                    </div>
+                </div>
+   </div>        
+
+      {% endfor %}
+</div>
+</div>
+
+
+{% else %}
+    
+    <div class="contaner">
+        <div class="jumbotron">
+            <h1>No results </h1>         
+            <p class="centre bold">There were no results matching your search: "{{ query }}" </p>
+    
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

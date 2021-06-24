@@ -1,0 +1,39 @@
+{% extends 'hawkuna/homepage.html' %}
+{% load static %}
+
+{% block title_block %}
+    Sell Product
+{% endblock %}
+
+{% block titlebar_block %}
+    Sell Product
+{% endblock %}
+
+{% block body_block %}
+
+
+    {% if sold %}
+    <div class="container">
+        <div class="jumbotron">
+        <h1>{{ product.name }} sold successfully!</h1>
+        <a href="{% url 'hawkuna:profile' the_name %}" class="btn btn-primary">My Profile</a><br/>
+        <a href="{% url 'hawkuna:homepage' %}" class="btn btn-primary">Homepage</a>
+    </div>
+    </div>
+    {% else %}
+    <div class="container">
+        <div class="jumbotron">
+        <h1>Sell {{ product.name }}</h1>
+   </div>
+            <div class="centre form-signin">
+                <form id="product_form" method="post" action="{% url 'hawkuna:sell_product' product.category.slug product.subcategory.slug product.slug %}"/>
+                    {% csrf_token %}
+                    <label for="uname">I want to sell {{ product.name }} to:</label><br>
+                    <input type="text" class="form-control" name="uname" id="uname" placeholder="Username..."><br/>
+                        <p>{{ message }}</p><br/>
+                    <input type="submit" name="submit" value="Sell" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

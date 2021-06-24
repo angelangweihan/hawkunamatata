@@ -1,0 +1,47 @@
+{% extends 'hawkuna/profile.html' %}
+{% load static %}
+
+{% block title_block %}
+    Cart
+{% endblock %}
+
+{% block titlebar_block %}
+    All items you love!
+{% endblock %}
+{% block body_block %}
+ <div class="jumbotron">
+    <h1>Cart</h1>
+</div>
+    {% if products %}
+        <div class="container">
+        <div class="row">
+        {% for p in products %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="#"><img src="{{  p.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ p.name }}`s image" /><br/> 
+                        </a>
+                    </div>
+                <div class="product-content">
+                        <h3 class="title"><a href="{% url 'reuse:product' p.category.slug p.subcategory.slug p.slug %}">{{ p.name }}</a></h3>
+                        <h5 class="subcat"> Sold by <a href="{% url 'reuse:profile' p.seller.slug %}">{{ p.seller }}</a></h5>
+                        <div class="price">${{ p.price }}0</div>
+                         <a href="{% url 'reuse:remove_from_wishlist' the_name p.slug %}" class="btn btn-primary">Remove</a>
+                        
+
+                </div>
+            </div>
+        </div>
+           
+               
+           
+           
+        {% endfor %}
+    {% else %}
+    <div class="container">
+        <p class="bold">Your cart is still empty.</p>
+        <p>What are you waiting for? It's second-hand shopping time!</p>
+   {% endif %}
+
+{% endblock %}
+

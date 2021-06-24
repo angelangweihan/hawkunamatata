@@ -1,0 +1,62 @@
+{% extends 'hawkuna/homepage.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block title_block %}
+	Add a Product
+{% endblock %}
+
+{% block titlebar_block %}
+    Add a Product
+{% endblock %}
+
+<!--template for adding a product to the app -->
+
+{% block body_block %}
+<!-- if product is added successfully - display success message -->
+    {% if added %}
+    <div class="container">
+        <div class="jumbotron">
+        <h1>{{ product.name }} added successfully!</h1>
+        <p>See <a href="{% url 'hawkuna:product' category.slug subcategory.slug product.slug %}">your product</a>, or go back to <a href="{% url 'hawkuna:profile' the_name%}">your profile </a>or the <a href="{% url 'hawkuna:homepage' %}">Homepage</a></p>
+    </div>
+    </div>
+    
+<!-- form for creating a product --->
+    {% else %}
+    <div class="jumbotron">
+        <h1>Add a Product to {{ subcategory.name }}</h1>
+
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3 col-md-2 col-sm-2">
+                <p></p>
+            </div>
+
+        <div class="col-lg-6 col-md-8 col-sm-6">
+                <form id="product_form" method="post" enctype="multipart/form-data" action="{% url 'hawkuna:add_product' category.slug subcategory.slug %}">
+
+                    {% csrf_token %}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+
+                    {% for field in form.visible_fields %}
+                         <div class="form-group">
+                        {{ field.errors }}
+                         {{ field.label_tag }}
+                        {% render_field field class="form-control" %}
+                         {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+            </div>
+            {% endfor %}
+                    <input type="submit" name="submit" value="Create Product" class="btn btn-primary"/>
+                </form>
+            </div>
+    {% endif %}
+{% endblock %}

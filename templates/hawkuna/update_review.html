@@ -1,0 +1,26 @@
+{% extends 'hawkuna/homepage.html' %}
+{% load static %}
+
+{% block title_block %}
+    Update Review
+{% endblock %}
+
+{% block titlebar_block %}
+    Update Review
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron">
+    <h1>Review for {{ product.name }}</h1>
+ </div>
+
+<div class="container">
+    <div class=" centre">
+        <form id="product_form" method="post" action="{% url 'hawkuna:update_review' product.slug %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+        <input type="submit" name="submit" value="Update review"  class="btn btn-primary" />
+    </form>
+</div>
+</div>
+{% endblock %}

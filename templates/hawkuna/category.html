@@ -1,0 +1,74 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    {{ selected_category.name }}
+{% endblock %}
+
+{% block titlebar_block %}
+    Explore items in  {{ selected_category.name }}
+{% endblock %}
+
+
+
+{% block body_block %}
+<!-- Heading of category-->
+<div class="jumbotron">
+    <h1> {{ selected_category.name }} </h1>
+</div>
+        <!-- If there are products in this category display them-->
+        {% if products %}
+        <div style="width:100%">
+            <form method="get" action="{% url 'hawkuna:show_category' selected_category.slug %}" class="form-inline centre" style="margin-left: 40%">
+                <input type="number" name="price-min" id="price-min" min="0" max="1000" placeholder="Min"><br/>
+                <input type="number" name="price-max" id="price-max"  min="0" max="1000" placeholder="Max">
+                <input type="submit" value="Filter" class="btn btn-primary">
+            </form>
+        </div>
+        <div class="container">
+        <div class="row">
+            {% for p in products %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="#"><img src="{{  p.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ p.name }}`s image" /><br/> 
+                        </a>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="title"><a href="/hawkuna/cat/{{ selected_category.slug }}/{{ p.subcategory.slug }}/{{ p.slug }}">{{ p.name }}</a></h3>
+                        <h5 class="subcat"> {{ p.subcategory }}</h5>
+                        <div class="price">£{{ p.price }}0</div>
+
+                    </div>
+
+                    <!-- Pop-up buttons -->
+                    <ul class="social">
+                        <!-- pop-up quick preview-->
+                        <li> <a href="javascript:toggle_visibility('{{ p.slug }}')" data-tip="quick view">
+                            <i class="fa fa-eye"></i> </a>
+                         </li>
+                        <div id="{{ p.slug }}" class="pop-up-menu">
+                            <div class="card">
+                                      <div class="card-body">
+                                        <p class="card-text">{{ p.description }}</p>
+                                        <p class="card-text"> Seller: {{ p.seller }}</p>
+                                        <p>  </p>
+                                      </div>
+                            </div>         
+                        </div>
+                      
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- If there are no products in the category-->
+            <div class="container"><p class="bold">No products in {{ selected_category.name}}. </p> </div>
+    </div>
+    </div>
+        {% endif %}
+
+
+
+{% endblock %}
+   

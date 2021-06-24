@@ -1,0 +1,53 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    {{ title }}
+{% endblock %}
+
+{% block titlebar_block %}
+    {{ title }}
+{% endblock %}
+
+{% block body_block %}
+
+<!-- template for becoming a seller -->
+
+    {% if profile.isSeller %}
+    <div class="container">
+        <!-- success message for becoming a seller-->
+        <div class="jumbotron centre">
+        <h1>Thank you.</h1>
+        <h2>You are now part of the hawkuna-matata* team.</h2>
+        <p>To start adding products, navigate into a category. You should see an "add product" button<br/>If you ever need help see the Seller Manual under "My Profile". Otherwhise you can always have a look at the FAQs or contact us</p>
+        <p><a href="{% url 'hawkuna:seller_manual' %}" >Go to the seller manual</a> or <a href="{% url 'hawkuna:homepage' %}">return to the homepage</a></p>
+    </div>
+    </div>
+    <!-- become a seller form --> 
+    {% else %}
+    <div class="jumbotron">
+        <h1>Become a seller</h1>
+    </div>
+    <div class="container">
+        <div class="jumbotron centre">
+        <h2 >Join the hawkuna-matata* team</h2>
+        <p>We are glad to hear you'd like to become a seller, {{ username }}!<br/>
+        Becoming a seller on hawkuna-matata* means that you have officially taken one step forward in helping the planet. 
+        <br /> 
+    Add other text because my creativity is over</p>
+        </div>
+        <hr />
+        <br/>
+        <div class="jumbotron centre">
+        <h3>How can the user pay you?</h3>
+        <h4>Please select all kind of payments you accept: </h4>
+        <form id="sellerForm" method="POST" action="{% url 'hawkuna:become_a_seller' user_name_slug=the_name %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Become A Seller" class="btn btn-primary"/>
+        </form>
+        <a href="{% url 'hawkuna:homepage' %} " >Return to the homepage</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

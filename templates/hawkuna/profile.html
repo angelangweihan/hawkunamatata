@@ -1,0 +1,151 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+{% load hawkuna_template_tags %}
+
+{% block title_block %}
+    Profile
+{% endblock %}
+
+{% block titlebar_block %}
+    {% if owned %}
+        My Profile
+    {% else %}
+        {{otheruser.username }}'s Profile
+    {% endif %}
+{% endblock %}
+<!-- profile template-->
+
+{% block body_block %}
+<div class="container">
+    <div class="row profile-data">
+        <!-- sidebar with user profile image and links to the appropriate functions available to users-->
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+            <img src="{{ picture.url }}" width="300" height="300" alt="profile image" />
+                {% if owned %}
+                    <p><a href="{% url 'hawkuna:change_password' user_name_slug=the_name %}"> Change Password </a></p>
+                    <p><a href="{% url 'hawkuna:edit_profile' user_name_slug=the_name  %}">Edit Profile</a></p>
+                    <p><a href="{% url 'hawkuna:wishlist' user_name_slug=the_name  %}">Wishlist</a></p>
+                    <p><a href="{% url 'hawkuna:chat' slug %}">Go to your chats</a></p>
+                    {% if isSeller %}
+                        <p><a href="{% url 'hawkuna:seller_manual' %}">Read the Seller Manual</a></p>
+                        <p><a href="{% url 'hawkuna:sold_products' user_name_slug=the_name %}">Your Sold Products</a></p>
+                         <p><a href="{% url 'hawkuna:current_products' user_name_slug=the_name %}">Your Current Products</a></p>
+                    {% else %}
+                        <p><a href="{% url 'hawkuna:become_a_seller' user_name_slug=the_name  %}">Become A Seller</a></p>
+                    {% endif %}
+                    <p><a href="{% url 'hawkuna:past_orders' user_name_slug=the_name %}">Your Past Orders</a></p>
+                {% else %}
+                    {% get_chat user otheruser as chat %}
+                    {% if chat %}
+                        <a href="{% url 'hawkuna:chat_open' chat.slug %}">Go to your chat with {{ otheruser.username }}</a>
+                    {% else %}
+                        <a href="{% url 'hawkuna:chat_with' slug %}">Open a chat with {{ otheruser.username }}</a>
+                    {% endif %}
+
+                {% endif %}
+
+
+                    
+      
+        </div>
+        
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+            <!-- profile information -->
+            {% if owned %}
+                <h4> {{ user.first_name }} {{ user.last_name }}</h4>
+                <p><i class="fa fa-user"></i>{{ user.username }}</p>
+            {% else %}
+                <h4>{{ otheruser.first_name }}  {{ otheruser.last_name }}</h4>
+                <p><i class="fa fa-user"></i>{{ otheruser.username }}</p>
+            {% endif %}
+        
+            {% if user.is_authenticated %}
+                {% if owned %}
+                    <p><i class="fa fa-envelope"></i>{{ user.email }}</p>
+                {% else %}
+                    <p><i class="fa fa-envelope"></i>{{ otheruser.email }}</p>
+                {% endif %}
+                <p><i class="fa fa-map-marker"></i>{{ address }}<br/> {{ city }} <br/> {{ postcode }} </p>
+            {% else %}
+                <p><a href="{% url 'hawkuna:login' %}">Log in</a> or <a href="{% url 'hawkuna:register' %}">Register</a> to see the user's info </p>
+            {% endif %}
+            <hr/>
+            <p><i class="fa fa-info"></i>{{ description }}</p>
+
+       
+         <hr class="review" />
+         <div>
+        {% if not owned %}
+            <p>If you've bought something from {{ otheruser }}, you can leave a review in <a href="{% url 'hawkuna:past_orders' the_name %}">your past orders</a></p><hr style="width:20%;"/>
+        {% endif %}
+        {% if reviews %}
+            <p>Rating: {% get_rating reviews %}</p>
+            <ul>
+            {% for review in reviews %}
+            <li><h4>{{ review.title }}</h4><h5>{{ review.rating }}</h5>
+                <h5>By {{ review.buyer }}, {{ review.on_date }}</h5>
+                <p>{{ review.text }}</p></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        </div>
+       
+       {% if user.is_authenticated %}
+            <div>
+               {% if isSeller %}
+                    {% if products %}
+                        <h3>Currently selling:</h3>
+                        <ul>
+                            {% for product in products %}
+                                <li><a href="{% url 'hawkuna:product' category_name_slug=product.category.slug subcategory_name_slug=product.subcategory.slug product_name_slug=product.slug %}">{{ product.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% if owned %}
+                            <p class="bold">You are not currently selling anything.</p>
+                        {% else %}
+                            <p class="bold">This user is not currently selling anything.</p>
+                        {% endif %}
+                    {% endif %}
+                    <div>
+                    {% if not owned %}
+                        <p>If you've bought something from {{ otheruser }}, you can leave a review in <a href="{% url 'hawkuna:past_orders' the_name %}">your past orders</a></p><hr style="width:20%;"/>
+                    {% endif %}
+                    {% if reviews %}
+                        <p>Rating: {% get_rating reviews %}</p>
+                        <ul>
+                        {% for review in reviews %}
+                        <li><h4>{{ review.title }}</h4><h5>{{ review.rating }}</h5>
+                            <h5>By <a href="{% url 'hawkuna:profile' review.buyer.slug %}">{{ review.buyer }}</a>, {{ review.on_date }}</h5>
+                            <p>{{ review.text }}</p></li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% if owned %}
+                        <p class="bold">You don`t have any reviews yet!</p>
+                        {% else %}
+                        <p class="bold"> No reviews yet! Be the first one to review this seller! </p>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+               {% endif %}
+            </div>
+
+        {% endif %}
+
+        </div>
+        </div>
+       
+   
+       
+        
+
+       
+        <div class="col-lg-3 col-md-6 d-none d-lg-block">
+            <p></p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

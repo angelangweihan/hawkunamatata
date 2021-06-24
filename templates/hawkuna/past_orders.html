@@ -1,0 +1,60 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+{% load hawkuna_template_tags %}
+
+{% block title_block %}
+    Past Orders
+{% endblock %}
+
+{% block titlebar_block %}
+    My Past Orders
+{% endblock %}
+
+<!-- past-orders template-->
+{% block body_block %}
+<div class="container">
+    {% if products %}
+    <div class="row">
+            {% for p in products %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="#"><img src="{{  p.image1.url }}" class="pic-1" width="300px" height="300px" alt="{{ p.name }}'s image" /><br/> 
+                        </a>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="title">{{ p.name }}</h3>
+                         <p>Sold by: {{ p.seller }}</p>
+                        <p class="price">£{{ p.price }}0</p>
+                        <p> {{ p.description }}</p>
+                        {% get_review product as rev %}
+                            {% if rev %}
+                            <div class="jumbotron">
+                                <h4>Your review:</h4>
+                                <h5>{{ rev.title }}, rating: {{ rev.rating }}</h5>
+                                <p>On date {{ rev.on_date }}</p>
+                                <p>{{ rev.text }}</p>
+                                <a href="{% url 'hawkuna:update_review' product_name_slug=product.slug %}" class="btn btn-primary">Update</a>
+                                <a href="{% url 'hawkuna:delete_review' product_name_slug=product.slug %}" class="btn btn-primary">Delete</a>
+                            </div>
+                            {% else %}
+                                <a href="{% url 'hawkuna:leave_a_review' product_name_slug=product.slug %}" class="btn btn-primary">Leave a review!</a>
+                        {% endif %}
+                    </div>
+                    <hr />
+                   
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <hr />
+
+    {% else %}
+    <div class="jumbotron">
+        <p class="bold">You haven't bought anything yet. Let`s start the shopping spree in hawkuna-matata*! </p>
+    </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}

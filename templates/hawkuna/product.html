@@ -1,0 +1,121 @@
+{% extends 'hawkuna/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    {{ product.name }}
+{% endblock %}
+
+{% block titlebar_block %}
+    Explore
+{% endblock %}
+
+{% block body_block %}
+<!-- template for a product page-->
+<div class="super_container">
+    <div class="single_product">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- display all images of the product - our database can keep up to  5 images-->
+                <div class="col-lg-2 order-lg-1 order-2 d-none d-lg-block">
+                    <ul class="image_list">
+                        {% if product.image2 %}
+                        <li data-image="{{ product.image2.url }}"><img src="{{ product.image2.url }}" alt="{{ product.name }}`s picture"></li>
+                        {% endif %}
+                         {% if product.image3 %}
+                         <li data-image="{{ product.image3.url }}"><img src="{{ product.image3.url }}" alt="{{ product.name }}`s picture"></li>
+                        {% endif %}
+                         {% if product.image4 %}
+                         <li data-image="{{ product.image4.url }}"><img src="{{ product.image4.url }}" alt="{{ product.name }}`s picture"></li>
+                        {% endif %}
+                        {% if product.image5 %}
+                         <li data-image="{{ product.image5.url }}"><img src="{{ product.image5.url }}" alt="{{ product.name }}`s picture"></li>
+                        {% endif %}
+                        
+                    </ul>
+                </div>
+                <!--main image of the products and product data-->
+                <div class="col-lg-4 order-lg-2 order-1">
+                    <div class="image_selected"><img src="{{ product.image1.url }}" alt="{{ product.name }}`s picture"></div>
+                </div>
+
+                <div class="col-lg-6 order-3">
+                    <div class="product_description">
+                        
+                        <div class="product_name">{{ product.name }}
+
+                        </div>
+                        
+                        <div> <span class="product_price"> £{{ product.price }}0 </span>  </div>
+                       
+                        <hr class="singleline">
+                        <div> <span class="product_info">
+                            <h5> Description </h5>{{ product.description }}
+                            
+                            
+                        </div>
+                        <hr class="singleline">
+                    <div> 
+                        {% if user.is_authenticated %}
+                            {% if seller == profile %}
+                            <!-- seller buttons to manage their products-->
+                                <button type="button" class="btn btn-primary"> <a href="{% url 'hawkuna:manage_product' category.slug subcategory.slug product.slug %}" style="color:white">Manage</a></button>
+                                <button type="button" class="btn btn-primary"><a href="{% url 'hawkuna:sell_product' category.slug subcategory.slug product.slug %}" style="color:white" >Sell</a></button>
+                                <button type="button" class="btn btn-primary"><a href="{% url 'hawkuna:delete_product' category.slug subcategory.slug product.slug %}" style="color:white" >Delete</a></button>
+                            
+                            {% else %}
+                            <!-- add to wishlist -->
+                                <form id="add_to_wishlist" action="{% url 'hawkuna:add_to_wishlist' category.slug subcategory.slug product.slug %}" method="post">
+                                {% csrf_token %}
+                                <input name="submit" type="submit" value="Add to wishlish" class="btn btn-primary" />
+                                </form>   
+                    </div>
+                    </div>
+                </div>
+            </div>
+          <!-- seller information under product-  visible only if user is authenticated-->
+            <hr class="line" style="margin-top: 80px"> 
+            <div class="profile-data">
+         
+            <h2> Seller Information </h2>
+           
+          
+            <img src="{{ seller.picture.url }}" alt="{{ seller }}'s profile pic" width="300" height="300" />
+             
+            
+            <p>Sold by: <a href="{% url 'hawkuna:profile' seller.slug %}">{{ seller }}</a></p>
+           
+            <p style="margin-bottom:0">Payments accepted: </p>
+            <ul>
+                {% if seller.paypal %}
+                    <li>Paypal</li>
+                {% endif %}
+                {% if seller.bank_transfer %}
+                    <li>Bank Transfer</li>
+                {% endif %}
+                {% if seller.cash %}
+                    <li>Cash</li>
+                {% endif %}
+            </ul>
+            <div style="margin-top:20px">
+            <h5>Location</h5>
+            <p><i class="fa fa-map-marker"></i>{{ seller.address }}<br/> {{ seller.city }} <br/> {{ seller.postcode }} </p>
+           </div>
+       
+        </div>
+    
+           
+        {% endif %}     
+    {% else %}
+
+        <p><a href="{% url 'hawkuna:login' %}" class="btn btn-primary">Log in</a> or <a href="{% url 'hawkuna:register' %}" class="btn btn-primary">Register</a> to see the product's info</p>
+   {% endif %}
+
+</span>
+</div>
+</div>
+</div>
+
+
+
+
+{% endblock %}

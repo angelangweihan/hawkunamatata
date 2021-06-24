@@ -1,0 +1,90 @@
+{% extends 'hawkuna/profile.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title_block %}
+	Edit Profile
+{% endblock %}
+
+{% block titlebar_block %}
+    Edit Profile
+{% endblock %}
+
+{% block body_block %}
+<!-- successfully edited profile -->
+        {% if changed %}
+        <div class="container">
+            <div class="jumbotron">
+                <p class="bold">Your profile has beed updated successfully!</strong>
+                <p>Go to <a href="{% url 'hawkuna:profile' the_name %}">your profile page </a>or back to the <a href="{% url 'hawkuna:homepage' %}">Homepage</a></p><br />
+            </div>
+        </div>
+
+<!-- render form for editing user`s profile-->
+        {% else %}
+        <div class="jumbotron">
+            <h1>Edit Profile</h1>
+        </div>
+        <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3 col-md-2 col-sm-2">
+                <p></p>
+            </div>
+
+        <div class="col-lg-6 col-md-8 col-sm-6">
+        <form id="user_form" method="post" class="form-horizontal" action="{% url 'hawkuna:edit_profile' the_name %}" enctype="multipart/form-data">
+            
+    
+            {% csrf_token %}
+            <!-- user form - renders email, first and second name and password-->
+
+            {% for hidden_field in form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+
+            {% for field in form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <!-- renders the profile specific fields as specified in our model - address, postcode, description, picture--->
+            {% for hidden_field in profile_form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+
+            {% for field in profile_form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+    
+             
+           
+             
+             <br />
+
+            
+            
+            <input type="submit" name="submit" value="Edit profile" class="btn btn-primary centre"/>
+        </form>
+        </div>
+        <div class="col-lg-3 col-md-2 col-sm-2">
+                <p></p>
+    </div>
+    </div>
+ 
+            <br/>
+        {% endif %}
+  
+</div>
+{% endblock %}
