@@ -25,7 +25,6 @@
                     <p><a href="{% url 'hawkuna:change_password' user_name_slug=the_name %}"> Change Password </a></p>
                     <p><a href="{% url 'hawkuna:edit_profile' user_name_slug=the_name  %}">Edit Profile</a></p>
                     <p><a href="{% url 'hawkuna:wishlist' user_name_slug=the_name  %}">Wishlist</a></p>
-                    <p><a href="{% url 'hawkuna:chat' slug %}">Go to your chats</a></p>
                     {% if isSeller %}
                         <p><a href="{% url 'hawkuna:seller_manual' %}">Read the Seller Manual</a></p>
                         <p><a href="{% url 'hawkuna:sold_products' user_name_slug=the_name %}">Your Sold Products</a></p>
@@ -35,12 +34,6 @@
                     {% endif %}
                     <p><a href="{% url 'hawkuna:past_orders' user_name_slug=the_name %}">Your Past Orders</a></p>
                 {% else %}
-                    {% get_chat user otheruser as chat %}
-                    {% if chat %}
-                        <a href="{% url 'hawkuna:chat_open' chat.slug %}">Go to your chat with {{ otheruser.username }}</a>
-                    {% else %}
-                        <a href="{% url 'hawkuna:chat_with' slug %}">Open a chat with {{ otheruser.username }}</a>
-                    {% endif %}
 
                 {% endif %}
 
